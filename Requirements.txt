@@ -1,0 +1,7 @@
+flask==1.1.2
+flask-restful==0.3.8
+dataset==1.4.5
+sqlite3==3.22.0
+
+
+Mako-1.1.4 alembic-1.5.8 banal-1.0.6 greenlet-1.0.0 importlib-metadata-3.7.3 python-dateutil-2.8.1 python-editor-1.0.4 sqlalchemy-1.4.2 typing-extensions-3.7.4.3 zipp-3.4.1
