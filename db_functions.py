@@ -6,14 +6,14 @@ from sqlite3 import Error
 def create_conn(db):
     conn = None
     try:
-        conn = sqlite3.connect(db)
+        conn = sqlite3.connect(db, check_same_thread=False)
     except Error:
         print(Error, 'DB Connection Failed')
     return conn
 
 
 # create tables
-def create_tables(cur):
+def create_tables(conn):
     # sql for new tables
     sql_users = '''CREATE TABLE IF NOT EXISTS users (
                         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,6 +25,7 @@ def create_tables(cur):
                         message TEXT,
                         date TEXT NOT NULL);''' # maybe date should be BLOB?
     try:
+        cur = conn.cursor()
         cur.execute(sql_users)
         cur.execute(sql_messages)
     except Error:
@@ -58,20 +59,23 @@ def new_message(conn, user_id, recipient, message, date):
 
 # RETRIEVE DATA
 # users
-def get_users(cur):
+def get_users(conn):
+    cur = conn.cursor()
     cur.execute("SELECT * FROM USERS")
     rows = cur.fetchall()
     return rows
 
 # sent messages
-def get_sent(cur, user_id): #need to add datetime/max return
+def get_sent(conn, user_id): #need to add datetime/max return
+    cur = conn.cursor()
     cur.execute("SELECT * FROM messages WHERE user_id = {}".format(user_id))
     rows = cur.fetchall()
     return rows
 
 
 # received messages
-def get_received(cur, user_id): #need to add datetime/max return
+def get_received(conn, user_id): #need to add datetime/max return
+    cur = conn.cursor()
     cur.execute("SELECT * FROM messages WHERE recipient = {} LIMIT 2".format(user_id))
     rows = cur.fetchall()
     return rows
