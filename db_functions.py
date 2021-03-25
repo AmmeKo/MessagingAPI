@@ -1,8 +1,9 @@
 import sqlite3
 from sqlite3 import Error
+from datetime import datetime
 
 
-# create connection
+# CREATE CONNECTION
 def create_conn(db):
     conn = None
     try:
@@ -12,7 +13,7 @@ def create_conn(db):
     return conn
 
 
-# create tables
+# CREATE TABLES
 def create_tables(conn):
     # sql for new tables
     sql_users = '''CREATE TABLE IF NOT EXISTS users (
@@ -65,20 +66,40 @@ def get_users(conn):
     rows = cur.fetchall()
     return rows
 
+
 # sent messages
 def get_sent(conn, user_id): #need to add datetime/max return
+    now = datetime.now()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM messages WHERE user_id = {}".format(user_id))
+    cur.execute("SELECT * FROM messages WHERE user_id = {} ORDER BY date desc LIMIT 100".format(user_id))
     rows = cur.fetchall()
-    return rows
+    recent_messages = []
+    for message in rows:
+        m_date = datetime.strptime(message[-1], '%Y-%m-%d %H:%M:%S.%f')
+        if now.day - m_date.day <= 30:
+            recent_messages.append(message)
+    return recent_messages
 
 
 # received messages
 def get_received(conn, user_id): #need to add datetime/max return
+    now = datetime.now()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM messages WHERE recipient = {} LIMIT 2".format(user_id))
+    cur.execute("SELECT * FROM messages WHERE recipient = {} ORDER BY date desc LIMIT 100".format(user_id))
     rows = cur.fetchall()
-    return rows
+    recent_messages = []
+    for message in rows:
+        m_date = datetime.strptime(message[-1], '%Y-%m-%d %H:%M:%S.%f')
+        if now.day - m_date.day <= 30:
+            recent_messages.append(message)
+    return recent_messages
+
+
+# UPDATE DATA
+def update_user(conn, user_id, name):
+    cur = conn.cursor()
+    cur.execute("UPDATE users SET name = '{}' WHERE user_id = {}".format(name, user_id))
+    conn.commit()
 
 
 # DELETE DATA
@@ -89,10 +110,17 @@ def delete_user(conn, user_id):
     conn.commit()
 
 
-# messages (which ones should they get to delete? By date, by recipient, all, none?
-# For now, users can just delete ALL their messages
-def delete_messages(conn, user_id):
+# messages
+# delete ALL when deleting user
+# which other ones should they get to delete? By date, by recipient, all, none?
+def delete_all_messages(conn, user_id):
     cur = conn.cursor()
     cur.execute("DELETE FROM messages WHERE user_id = {}".format(user_id))
     cur.execute("DELETE FROM messages WHERE recipient = {}".format(user_id))
+    conn.commit()
+
+
+def delete_message(conn, message_id):
+    cur = conn.cursor()
+    cur.execute("DELETE FROM messages WHERE message_id = {}".format(message_id))
     conn.commit()
