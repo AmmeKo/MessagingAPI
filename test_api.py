@@ -31,7 +31,7 @@ with app.test_client() as c:
     def test_get_users():
         response = c.get('/users')
         assert response.status_code == 200
-        assert b'test user 1' in response.data
+        assert b'Flask_Tester1' in response.data
 
 
     def test_get_sent():
