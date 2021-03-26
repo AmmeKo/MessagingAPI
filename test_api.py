@@ -19,28 +19,31 @@ with app.test_client() as c:
 
 
     def test_send_message1():
-        response = c.post('/1/send_message', data=json.dumps({'recipient': 2, 'message': 'test message'}), content_type='application/json')
+        response = c.post('/1/send_message', data=json.dumps({'recipient': 2, 'message': 'test send message'}), content_type='application/json')
         assert response.status_code == 201
 
 
     def test_send_message2():
-        response = c.post('/2/send_message', data=json.dumps({'recipient': 1, 'message': 'test message'}), content_type='application/json')
+        response = c.post('/2/send_message', data=json.dumps({'recipient': 1, 'message': 'test received message'}), content_type='application/json')
         assert response.status_code == 201
 
 
     def test_get_users():
         response = c.get('/users')
         assert response.status_code == 200
+        assert b'test user 1' in response.data
 
 
     def test_get_sent():
         response = c.get('/1/sent')
         assert response.status_code == 200
+        assert b'test send message' in response.data
 
 
     def test_get_received():
         response = c.get('/1/received')
         assert response.status_code == 200
+        assert b'test received message' in response.data
 
 
     def test_delete_message():
