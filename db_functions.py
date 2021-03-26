@@ -105,8 +105,8 @@ def delete_all_messages(conn, user_id):
     conn.commit()
 
 
-'''future feature: add option to delete multiple messages as well as 
-option to delete by additional criteria (date, sender/recipient, etc.)'''
+# future feature: add option to delete multiple messages as well as
+# option to delete by additional criteria (date, sender/recipient, etc.)
 def delete_message(conn, message_id):
     cur = conn.cursor()
     cur.execute("DELETE FROM messages WHERE message_id = {}".format(message_id))
