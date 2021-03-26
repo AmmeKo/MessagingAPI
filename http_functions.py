@@ -1,6 +1,6 @@
 from flask import make_response, jsonify, request
-from db_functions import new_message, new_user, get_users, get_received, get_sent, \
-    update_user, delete_user, delete_all_messages, delete_message
+from db_functions import (new_message, new_user, get_users, get_received, get_sent,
+    update_user, delete_user, delete_all_messages, delete_message)
 from datetime import datetime
 
 

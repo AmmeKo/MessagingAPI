@@ -1,8 +1,7 @@
 from flask import Flask, make_response, request
-from http_functions import \
-    api_delete_message, api_delete_user, \
-    api_get_received, api_get_sent, api_get_users, \
-    api_new_user, api_send_message, api_edit_user
+from http_functions import (api_delete_message, api_delete_user,
+    api_get_received, api_get_sent, api_get_users,
+    api_new_user, api_send_message, api_edit_user)
 from db_functions import create_conn, create_tables
 
 
